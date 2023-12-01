@@ -1,0 +1,19 @@
+{
+    "Dadras": {
+        "Alpha": "13.29",
+        "Mix": "0.564",
+        "Num": "7",
+        "Resample": "0",
+        "Ribbon_Size": "78.548",
+        "Ribbon_min_length": "21.855",
+        "Smooth_spacing": "1",
+        "Smoothing": "0",
+        "ZFall": "0",
+        "a": "0.655",
+        "b": "1.084",
+        "c": "4.522",
+        "d": "5.434",
+        "dt": "0.003",
+        "r": "5.972"
+    }
+}
