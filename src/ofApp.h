@@ -12,6 +12,7 @@
 #define SAMPLE_RATE 44100
 #define AUDIO_BUFFER_SIZE 512
 #define DRAWING_BUFFER_SIZE 10000
+#define SAMPLE_RATE 44100
 
 
 class ofApp : public ofBaseApp{
@@ -22,16 +23,6 @@ class ofApp : public ofBaseApp{
 		void draw() override;
 
 		void keyPressed(int key) override;
-		void keyReleased(int key) override;
-		void mouseMoved(int x, int y ) override;
-		void mouseDragged(int x, int y, int button) override;
-		void mousePressed(int x, int y, int button) override;
-		void mouseReleased(int x, int y, int button) override;
-		void mouseEntered(int x, int y) override;
-		void mouseExited(int x, int y) override;
-		void windowResized(int w, int h) override;
-		void dragEvent(ofDragInfo dragInfo) override;
-		void gotMessage(ofMessage msg) override;
         void audioOut(ofSoundBuffer& output) override;
         bool isUnstable(const Dadras& attractor);
     
@@ -49,9 +40,10 @@ class ofApp : public ofBaseApp{
         ofParameter<float>  alpha;
         ofParameter<float>  mixFactor;
         ofParameter<int>    numIterations;
-        ofParameter<double> dt;
+        ofParameter<float>  dt;
+        ofParameter<float>  lerpTime;
+        ofParameter<int>    skipFrames;
         
         ofxImGui::Gui gui;
 
-    
 };

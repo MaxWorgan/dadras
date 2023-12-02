@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include "DadrasAttractor.h"
+#include "ofJson.h"
 
 class PresetManager {
     
@@ -27,15 +28,20 @@ class PresetManager {
     
 public:
     
-    PresetManager() : lerpTime(2.0), lerpTimeEnd(0), lerp(false) {
+    PresetManager() : lerpTime(2.0), lerpTimeEnd(0), lerp(false), currentScene(1) {
         targetParams = new DadrasParameters();
         startParams  = new DadrasParameters();
         presets.resize(10);
+        loadPresetsFromJson();
+        currentParams = &presets[1];
     }
     
+    int currentScene;
     void update(DadrasParameters &attractorParams);
     void keyPressed(int key);
-    void setLerpTime(float time);
+    void setLerpTime(float &time);
+    void savePresetsToJson();
+    void loadPresetsFromJson();
 
 };
 

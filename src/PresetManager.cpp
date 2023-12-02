@@ -40,12 +40,34 @@ void PresetManager::keyPressed(int key) {
         lerpTimeEnd = ofGetElapsedTimef() + lerpTime;
         *startParams = *currentParams;
         *targetParams = presets[key - '0'];
+        currentScene = key - '0';
     } else if (keycodes.find(key) != keycodes.end()){
         ofLog() << "Moving to state " << keycodes.at(key);
         lerp = true;
         lerpTimeEnd = ofGetElapsedTimef();
         *startParams = *currentParams;
         *targetParams = presets[keycodes.at(key)];
+    } else if (key == 's') {
+        savePresetsToJson();
+    } else if (key == 'l'){
+        loadPresetsFromJson();
     }
 
 }
+
+void PresetManager::setLerpTime(float &time){
+    lerpTime = time;
+}
+
+void PresetManager::savePresetsToJson() { 
+    ofJson j = presets;
+    ofSavePrettyJson("presets.json", j);
+    ofLog() << "Saved presets to presets.json";
+}
+
+void PresetManager::loadPresetsFromJson() {
+    ofJson j = ofLoadJson("presets.json");
+    presets = j.template get<std::vector<DadrasParameters>>();
+    ofLog() << "Loaded presets from presets.json";
+}
+

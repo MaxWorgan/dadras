@@ -1,6 +1,5 @@
 #include "ofApp.h"
-#define SAMPLE_RATE 44100
-#define BUFFER_SIZE 512
+
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -18,7 +17,7 @@ void ofApp::setup(){
     settings.sampleRate =  SAMPLE_RATE;
     settings.numOutputChannels = 2;
     settings.numInputChannels = 0;
-    settings.bufferSize = BUFFER_SIZE;
+    settings.bufferSize = AUDIO_BUFFER_SIZE;
     soundStream.setup(settings);
     
     attractor = new Dadras();
@@ -29,11 +28,17 @@ void ofApp::setup(){
     mixFactor.set("Mix", 1.0,1.0,0.0);
     numIterations.set("Num", 3,1,50);
     dt.set("dt", 0.003,0.00001,0.01);
+    lerpTime.set("Lerp Time", 2,0.1,10);
+    skipFrames.set("Skip Frames", 2, 1, 10);
+    
+    lerpTime.addListener(&presetManager, &PresetManager::setLerpTime);
     
     polyLine.clear();
     waveIndex = 0;
     
 }
+
+static float rotation = 0.0;
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -111,6 +116,7 @@ void ofApp::draw(){
     {
         ImGui::SetWindowSize(ImVec2(500,300));
         ImGui::Text("%.1f FPS (%.3f ms/frame)", ofGetFrameRate(), 1000.0f / ImGui::GetIO().Framerate);
+        ImGui::Text("Scene %i", presetManager.currentScene);
         ImGui::SliderFloat("a", &attractor->params.a,0.1 ,10.0);
         ImGui::SliderFloat("b", &attractor->params.b,0.1 ,10.0);
         ImGui::SliderFloat("c", &attractor->params.c,0.1 ,10.0);
@@ -124,6 +130,8 @@ void ofApp::draw(){
         ofxImGui::AddParameter(mixFactor);
         ofxImGui::AddParameter(numIterations);
         ofxImGui::AddParameter(dt);
+        ofxImGui::AddParameter(lerpTime);
+        ofxImGui::AddParameter(skipFrames);
     }
     
     ofxImGui::EndWindow(mainSettings);
@@ -152,10 +160,11 @@ void ofApp::audioOut(ofSoundBuffer& output){
         float x = tanh(attractor->state.x * 0.01);
         float y = tanh(attractor->state.y * 0.01);
         float z = tanh(attractor->state.z * 0.01);
+        
         output[i * outChannels + 0] = x * crossfadeCoeff1 + y * crossfadeCoeff2;
         output[i * outChannels + 1] = y * crossfadeCoeff1 + z * crossfadeCoeff2;
         
-        if(i % 2 == 0) {
+        if(i % skipFrames == 0) {
             points[waveIndex] = attractor->state * 30.0f;
             
             if (waveIndex < (DRAWING_BUFFER_SIZE - 1)) {
@@ -175,54 +184,4 @@ bool ofApp::isUnstable(const Dadras& attractor) {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     presetManager.keyPressed(key);
-}
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
- 
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
 }
