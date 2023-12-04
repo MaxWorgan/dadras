@@ -11,15 +11,16 @@
 #include <stdio.h>
 #include "DadrasAttractor.h"
 #include "ofJson.h"
+#include "SimulationParameters.h"
 
 class PresetManager {
     
     //parameters to move to
-    DadrasParameters* targetParams;
-    DadrasParameters* startParams;
-    DadrasParameters* currentParams;
+    AllParameters* targetParams;
+    AllParameters* startParams;
+    AllParameters* currentParams;
 
-    std::vector<DadrasParameters> presets;
+    std::vector<AllParameters> presets;
     
     float lerpTime;
     float lerpTimeEnd;
@@ -29,15 +30,15 @@ class PresetManager {
 public:
     
     PresetManager() : lerpTime(2.0), lerpTimeEnd(0), lerp(false), currentScene(1) {
-        targetParams = new DadrasParameters();
-        startParams  = new DadrasParameters();
+        targetParams = new AllParameters();
+        startParams  = new AllParameters();
         presets.resize(10);
         loadPresetsFromJson();
         currentParams = &presets[1];
     }
     
     int currentScene;
-    void update(DadrasParameters &attractorParams);
+    void update(AllParameters &params);
     void keyPressed(int key);
     void setLerpTime(float &time);
     void savePresetsToJson();

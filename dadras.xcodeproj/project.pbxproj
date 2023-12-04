@@ -178,6 +178,8 @@
 		DA9527BD2B1A00DD0033D915 /* DadrasAttractor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DadrasAttractor.h; sourceTree = "<group>"; };
 		DA9527BE2B1A01530033D915 /* PresetManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PresetManager.cpp; sourceTree = "<group>"; };
 		DA9527BF2B1A01530033D915 /* PresetManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PresetManager.hpp; sourceTree = "<group>"; };
+		DA9527C12B1BE4DB0033D915 /* SimulationParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimulationParameters.h; sourceTree = "<group>"; };
+		DA9527C22B1BF3F10033D915 /* todo */ = {isa = PBXFileReference; lastKnownFileType = text; path = todo; sourceTree = "<group>"; };
 		"DDAB5051-E324-4E67-A7FF-DCFEA5E08A48" /* ofxOscParameterSync.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ofxOscParameterSync.h; path = ../../../addons/ofxOsc/src/ofxOscParameterSync.h; sourceTree = SOURCE_ROOT; };
 		"E155F866-3AED-4862-90FE-8371B39EB92F" /* EngineOpenGLES.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = EngineOpenGLES.h; path = ../../../addons/ofxImGui/src/EngineOpenGLES.h; sourceTree = SOURCE_ROOT; };
 		"E45E3BC3-58A0-442C-867B-BA0B8F0179F4" /* ofxPanel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ofxPanel.h; path = ../../../addons/ofxGui/src/ofxPanel.h; sourceTree = SOURCE_ROOT; };
@@ -398,6 +400,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				DA9527C22B1BF3F10033D915 /* todo */,
 				DA9527BC2B19FD960033D915 /* .gitignore */,
 				191CD6FA2847E21E0085CBB6 /* of.entitlements */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
@@ -418,6 +421,7 @@
 				DA9527BD2B1A00DD0033D915 /* DadrasAttractor.h */,
 				DA9527BE2B1A01530033D915 /* PresetManager.cpp */,
 				DA9527BF2B1A01530033D915 /* PresetManager.hpp */,
+				DA9527C12B1BE4DB0033D915 /* SimulationParameters.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

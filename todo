@@ -1,0 +1,17 @@
+TODO:
+
++ Fix the GUI glitch
++ Move GUI to main window with hide button?\
++ Include non-attractor params in presets
++ Add randomize button
++ Add micro-variation button
+    - Add undo for micro-variation button
+
++ Add Auto rotate camera controls
+- Make the graphics good (glsl)
+- Add alternative tweens
+- Add a MLP for traversing the presets in 2D
+    https://github.com/yixuan/MiniDNN
+    or https://github.com/mlpack/mlpack
+    just like flucoma's examples...
+

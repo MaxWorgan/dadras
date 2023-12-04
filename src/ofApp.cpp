@@ -9,7 +9,7 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     ofBackground(255);
     
-    gui.setup(nullptr, true, ImGuiConfigFlags_ViewportsEnable );
+    gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true );
 
     // Setup ofSound
     ofSoundStreamSettings settings;
@@ -21,43 +21,39 @@ void ofApp::setup(){
     soundStream.setup(settings);
     
     attractor = new Dadras();
-    
-    maxSize.set("Ribbon Size", 40,5,100);
-    sizeLength.set("Ribbon min length",50,5,100);
-    alpha.set("Alpha", 20,1,255);
-    mixFactor.set("Mix", 1.0,1.0,0.0);
-    numIterations.set("Num", 3,1,50);
-    dt.set("dt", 0.003,0.00001,0.01);
-    lerpTime.set("Lerp Time", 2,0.1,10);
-    skipFrames.set("Skip Frames", 2, 1, 10);
-    
-    lerpTime.addListener(&presetManager, &PresetManager::setLerpTime);
+   
+    params.sParams.lerpTime.addListener(&presetManager, &PresetManager::setLerpTime);
     
     polyLine.clear();
+    mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+
     waveIndex = 0;
-    
+    autoRotate = false;
+    rotationSpeedX = 1.0;
+    rotationSpeedY = 1.0;
+    rotationSpeedZ = 1.0;
+
 }
 
-static float rotation = 0.0;
 
 //--------------------------------------------------------------
 void ofApp::update(){
     polyLine.clear();
     polyLine.addVertices(points);
-    presetManager.update(attractor->params);
+    presetManager.update(params);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    
     cam.begin();
     
     auto verts = polyLine.getVertices();
+    mesh.clear();
     
-    ofSetColor(0,alpha);
+    ofSetColor(0,params.sParams.alpha);
     //do the same thing from the first example...
-    ofMesh mesh;
-    mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
     for(unsigned int i = 1; i < (int)verts.size(); i++){
 
         //find this point and the next point
@@ -85,7 +81,7 @@ void ofApp::draw(){
         //use the map function to determine the distance.
         //the longer the distance, the narrower the line.
         //this makes it look a bit like brush strokes
-        float thickness = ofMap(distance, 0, sizeLength, maxSize, 2, true);
+        float thickness = ofMap(distance, 0, params.sParams.lineMinLength, params.sParams.lineMaxSize, 2, true);
         
         // calculate a taper based on the index
         float indexPct = 1.0f;
@@ -105,33 +101,58 @@ void ofApp::draw(){
     }
 
     //end the shape
+    if(autoRotate) {
+        static float rotationX = 0.1;
+        static float rotationY = 0.1;
+        static float rotationZ = 0.1;
+        ofRotateXDeg(rotationX);
+        ofRotateYDeg(rotationY);
+        ofRotateZDeg(rotationZ);
+        rotationX += rotationSpeedX;
+        rotationY += rotationSpeedY;
+        rotationZ += rotationSpeedZ;
+    }
     mesh.draw();
     cam.end();
     
     //required to call this at beginning
     auto mainSettings = ofxImGui::Settings();
     gui.begin();
-    static bool bCollapse = false;
-    if (ofxImGui::BeginWindow("Dadras", mainSettings, ImGuiWindowFlags_NoCollapse, &bCollapse))
-    {
-        ImGui::SetWindowSize(ImVec2(500,300));
+//    static bool bCollapse = false;
+    if (ofxImGui::BeginWindow("Dadras", mainSettings)){
+//        ImGui::SetWindowSize(ImVec2(500,300));
         ImGui::Text("%.1f FPS (%.3f ms/frame)", ofGetFrameRate(), 1000.0f / ImGui::GetIO().Framerate);
         ImGui::Text("Scene %i", presetManager.currentScene);
-        ImGui::SliderFloat("a", &attractor->params.a,0.1 ,10.0);
-        ImGui::SliderFloat("b", &attractor->params.b,0.1 ,10.0);
-        ImGui::SliderFloat("c", &attractor->params.c,0.1 ,10.0);
-        ImGui::SliderFloat("d", &attractor->params.d,0.1 ,10.0);
-        ImGui::SliderFloat("r", &attractor->params.r,0.1 ,10.0);
+        ofxImGui::AddParameter(params.dParams.a);
+        ofxImGui::AddParameter(params.dParams.b);
+        ofxImGui::AddParameter(params.dParams.c);
+        ofxImGui::AddParameter(params.dParams.d);
+        ofxImGui::AddParameter(params.dParams.r);
         ImGui::Separator();
-        ofxImGui::AddParameter(maxSize);
-        ofxImGui::AddParameter(sizeLength);
-        ofxImGui::AddParameter(alpha);
+        ofxImGui::AddParameter(params.sParams.lineMaxSize);
+        ofxImGui::AddParameter(params.sParams.lineMinLength);
+        ofxImGui::AddParameter(params.sParams.alpha);
         ImGui::Separator();
-        ofxImGui::AddParameter(mixFactor);
-        ofxImGui::AddParameter(numIterations);
-        ofxImGui::AddParameter(dt);
-        ofxImGui::AddParameter(lerpTime);
-        ofxImGui::AddParameter(skipFrames);
+        ofxImGui::AddParameter(params.sParams.mixFactor);
+        ofxImGui::AddParameter(params.sParams.numIterations);
+        ofxImGui::AddParameter(params.sParams.dt);
+        ofxImGui::AddParameter(params.sParams.lerpTime);
+        ofxImGui::AddParameter(params.sParams.skipFrames);
+        ImGui::Separator();
+        if (ImGui::Button("randomize")) {
+            params.dParams.randomize();
+        }
+        if (ImGui::Button("micro-randomize")) {
+            params.dParams.microRandomize(params.sParams.microRandomizeAmt);
+
+        }
+        ofxImGui::AddParameter(params.sParams.microRandomizeAmt);
+        if (ImGui::Button("Auto Rotate")) {
+            autoRotate = !autoRotate;
+        }
+        ImGui::SliderFloat("Rotate X Speed", &rotationSpeedX, 0.0, 10.0);
+        ImGui::SliderFloat("Rotate Y Speed", &rotationSpeedY, 0.0, 10.0);
+        ImGui::SliderFloat("Rotate Z Speed", &rotationSpeedZ, 0.0, 10.0);
     }
     
     ofxImGui::EndWindow(mainSettings);
@@ -141,14 +162,14 @@ void ofApp::draw(){
 
 
 void ofApp::audioOut(ofSoundBuffer& output){
-    float angle = mixFactor * M_PI_2;
+    float angle = params.sParams.mixFactor * M_PI_2;
     float crossfadeCoeff1 = cos(angle);
     float crossfadeCoeff2 = sin(angle);
     
     std::size_t outChannels = output.getNumChannels();
     for (int i = 0; i < output.getNumFrames(); ++i){
-        for( size_t i = 0; i < numIterations; ++i) {
-            attractor->integrate(dt);
+        for( size_t i = 0; i < params.sParams.numIterations; ++i) {
+            attractor->integrate(params.sParams.dt, params.dParams);
         }
         if(isUnstable(*attractor)){
             attractor->state.x = 1.0;
@@ -164,7 +185,7 @@ void ofApp::audioOut(ofSoundBuffer& output){
         output[i * outChannels + 0] = x * crossfadeCoeff1 + y * crossfadeCoeff2;
         output[i * outChannels + 1] = y * crossfadeCoeff1 + z * crossfadeCoeff2;
         
-        if(i % skipFrames == 0) {
+        if(i % params.sParams.skipFrames == 0) {
             points[waveIndex] = attractor->state * 30.0f;
             
             if (waveIndex < (DRAWING_BUFFER_SIZE - 1)) {

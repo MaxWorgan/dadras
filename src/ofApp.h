@@ -8,6 +8,7 @@
 #include "ImHelpers.h"
 #include "DadrasAttractor.h"
 #include "PresetManager.hpp"
+#include "SimulationParameters.h"
 
 #define SAMPLE_RATE 44100
 #define AUDIO_BUFFER_SIZE 512
@@ -27,22 +28,21 @@ class ofApp : public ofBaseApp{
         bool isUnstable(const Dadras& attractor);
     
         Dadras* attractor;
+        AllParameters params;
+    
         PresetManager presetManager;
        
         ofEasyCam cam;
         vector<glm::vec3> points;
         ofPolyline polyLine;
+        ofMesh mesh;
+        bool autoRotate;
+        float rotationSpeedX;
+        float rotationSpeedY;
+        float rotationSpeedZ;
+
         int waveIndex;
         ofSoundStream soundStream;
-        
-        ofParameter<float>  maxSize;
-        ofParameter<float>  sizeLength;
-        ofParameter<float>  alpha;
-        ofParameter<float>  mixFactor;
-        ofParameter<int>    numIterations;
-        ofParameter<float>  dt;
-        ofParameter<float>  lerpTime;
-        ofParameter<int>    skipFrames;
         
         ofxImGui::Gui gui;
 
