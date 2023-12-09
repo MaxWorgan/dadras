@@ -19,25 +19,16 @@ struct DadrasParameters{
         c.set("c", 1.7,0.1,10.0);
         d.set("d", 2.0,0.1,10.0);
         r.set("r", 9.0,0.1,10.0);
-
-    }
-    
-    void randomize() {
-        a = ofRandom(a.getMin(), a.getMax());
-        b = ofRandom(b.getMin(), b.getMax());
-        c = ofRandom(c.getMin(), c.getMax());
-        d = ofRandom(d.getMin(), d.getMax());
-        r = ofRandom(r.getMin(), r.getMax());
-    }
-    
-    void microRandomize(float amt) {
-        a = ofClamp(a + ofRandomf() * amt, a.getMin(), a.getMax());
-        b = ofClamp(b + ofRandomf() * amt, b.getMin(), b.getMax());
-        c = ofClamp(c + ofRandomf() * amt, c.getMin(), c.getMax());
-        d = ofClamp(d + ofRandomf() * amt, d.getMin(), d.getMax());
-        r = ofClamp(r + ofRandomf() * amt, r.getMin(), r.getMax());
     }
 
+    ostream& operator<<(ostream& os) {
+        return os << "a: " << a << endl
+               << "b: " << b << endl
+               << "c: " << c << endl
+               << "d:" <<  d << endl
+               << "r:" << r  << endl;
+    }
+    
  
 };
 

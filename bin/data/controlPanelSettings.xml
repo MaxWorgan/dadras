@@ -1,0 +1,65 @@
+<a>
+    <val_0>3</val_0>
+</a>
+<b>
+    <val_0>2.7</val_0>
+</b>
+<c>
+    <val_0>1.7</val_0>
+</c>
+<d>
+    <val_0>2</val_0>
+</d>
+<r>
+    <val_0>9</val_0>
+</r>
+<randomize>
+    <val_0></val_0>
+</randomize>
+<micro-randomize>
+    <val_0></val_0>
+</micro-randomize>
+<Randomize_Amt>
+    <val_0>0.5</val_0>
+</Randomize_Amt>
+<Lerp_Time>
+    <val_0>2</val_0>
+</Lerp_Time>
+<X_pos>
+    <val_0>0</val_0>
+    <val_1>0</val_1>
+</X_pos>
+<capture>
+    <val_0></val_0>
+</capture>
+<Ribbon_Size>
+    <val_0>40</val_0>
+</Ribbon_Size>
+<Ribbon_min_length>
+    <val_0>50</val_0>
+</Ribbon_min_length>
+<Alpha>
+    <val_0>20</val_0>
+</Alpha>
+<Skip_Frames>
+    <val_0>2</val_0>
+</Skip_Frames>
+<val_0>1</val_0>
+<Rotation_X>
+    <val_0>0</val_0>
+</Rotation_X>
+<Rotation_Y>
+    <val_0>0</val_0>
+</Rotation_Y>
+<Rotation_Z>
+    <val_0>0</val_0>
+</Rotation_Z>
+<Mix>
+    <val_0>1</val_0>
+</Mix>
+<dt>
+    <val_0>0.003</val_0>
+</dt>
+<Num>
+    <val_0>3</val_0>
+</Num>

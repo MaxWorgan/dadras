@@ -2,3 +2,4 @@ ofxGui
 ofxImGui
 ofxOsc
 ofxXmlSettings
+ofxControlPanel

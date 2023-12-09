@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include "guiTypeButton.h"
 
 
 //--------------------------------------------------------------
@@ -8,8 +9,14 @@ void ofApp::setup(){
     ofSetFrameRate(60);
     ofSetVerticalSync(true);
     ofBackground(255);
+
+    srand(time(0));
     
-    gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true );
+    ann = genann_init(2, 1, 5, 5);
+
+    gui.setup("Dadras Attractor Parameters", 0.0, 0.0, 300, ofGetHeight(), false);
+
+    setupGui(gui, params);
 
     // Setup ofSound
     ofSoundStreamSettings settings;
@@ -21,26 +28,154 @@ void ofApp::setup(){
     soundStream.setup(settings);
     
     attractor = new Dadras();
-   
+
     params.sParams.lerpTime.addListener(&presetManager, &PresetManager::setLerpTime);
+    params.sParams.mouseX.addListener(&(*this), &ofApp::predictParameters);
     
     polyLine.clear();
     mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 
     waveIndex = 0;
-    autoRotate = false;
-    rotationSpeedX = 1.0;
-    rotationSpeedY = 1.0;
-    rotationSpeedZ = 1.0;
+
+    showControls = false;
 
 }
 
+void ofApp::setupGui(ofxControlPanel &gui, AllParameters &params) {
+    gui.setWhichPanel(0);
+    gui.addSlider(params.dParams.a);
+    gui.addSlider(params.dParams.b);
+    gui.addSlider(params.dParams.c);
+    gui.addSlider(params.dParams.d);
+    gui.addSlider(params.dParams.r);
+    ofParameter<void> randomizeParam = ofParameter<void>("randomize");
+    randomizeParam.addListener(&params, &AllParameters::randomize);
+    gui.addButton(randomizeParam);
+    ofParameter<void> microRandomize = ofParameter<void>("micro-randomize");
+    microRandomize.addListener(&params, &AllParameters::microRandomize);
+    gui.addButton(microRandomize);
+    gui.addSlider(params.sParams.microRandomizeAmt);
+    gui.addSlider(params.sParams.lerpTime);
+    gui.addSlider2D(params.sParams.mouseX, params.sParams.mouseY);
+    ofParameter<void> capture = ofParameter<void>("capture");
+    capture.addListener(&(* this), &ofApp::capture);
+    gui.addButton(capture);
+    ofParameter<void> clear = ofParameter<void>("clear");
+    clear.addListener(&(* this), &ofApp::clearTrainingData);
+    gui.addButton(clear);
+    ofParameter<void> train = ofParameter<void>("train");
+    train.addListener(&(* this), &ofApp::train);
+    gui.addButton(train);
+    gui.addLabel(loss);
+    gui.addSlider(params.sParams.numTrainingCycles);
+    gui.addSlider(params.sParams.learningRate);
+    gui.addToggle(params.sParams.predict);
+    gui.addPanel("Display Parameters",8,false);
+    gui.setWhichPanel(1);
+    gui.addSlider(params.sParams.lineMaxSize);
+    gui.addSlider(params.sParams.lineMinLength);
+    gui.addSlider(params.sParams.alpha);
+    gui.addSlider(params.sParams.skipFrames);
+    gui.addToggle(params.sParams.autoRotate);
+    gui.addSlider(params.sParams.rotationSpeedX);
+    gui.addSlider(params.sParams.rotationSpeedY);
+    gui.addSlider(params.sParams.rotationSpeedZ);
+    gui.addPanel("Misc Parameters",8,false);
+    gui.setWhichPanel(2);
+    gui.addSlider(params.sParams.audioSignalReduction);
+    gui.addSlider(params.sParams.mixFactor);
+    gui.addSlider(params.sParams.dt);
+    gui.addSlider(params.sParams.numIterations);
+}
 
 //--------------------------------------------------------------
 void ofApp::update(){
     polyLine.clear();
     polyLine.addVertices(points);
     presetManager.update(params);
+    if(showControls) gui.update();
+}
+
+double ofApp::scaleParameter(ofParameter<float> &p){
+    return ofMap(p.get(), p.getMin(), p.getMax(), 0.0,1.0);
+}
+float ofApp::rescaleToParameter(double value, ofParameter<float> &p){
+    return ofMap(value, 0.0, 1.0, p.getMin(), p.getMax());
+}
+
+void ofApp::capture(){
+
+    vector<double> scaledOutput = {
+        scaleParameter(params.dParams.a),
+        scaleParameter(params.dParams.b),
+        scaleParameter(params.dParams.c),
+        scaleParameter(params.dParams.d),
+        scaleParameter(params.dParams.r),
+    };
+
+    training_data.push_back(
+        tuple(
+            ofVec2f(params.sParams.mouseX.get(),params.sParams.mouseY.get()),
+            scaledOutput
+        )
+    );
+}
+
+void ofApp::clearTrainingData(){
+    training_data.clear();
+}
+
+void ofApp::predictParameters(float &value){
+    if (params.sParams.predict) {
+        const double data[2] = {params.sParams.mouseX.get(), params.sParams.mouseY.get()};
+        ofLog() << "predict input:  x - " << data[0] << " y - " << data[1];
+        const double *output = genann_run(ann, data);
+        ofLog() << "predict output: " << rescaleToParameter(output[0], params.dParams.a) << " "
+                << rescaleToParameter(output[1], params.dParams.b) << " "
+                << rescaleToParameter(output[1], params.dParams.c) << " "
+                << rescaleToParameter(output[1], params.dParams.d) << " "
+                << rescaleToParameter(output[1], params.dParams.r);
+
+        params.dParams.a = rescaleToParameter(output[0],params.dParams.a);
+        params.dParams.b = rescaleToParameter(output[1],params.dParams.b);
+        params.dParams.c = rescaleToParameter(output[2],params.dParams.c);
+        params.dParams.d = rescaleToParameter(output[3],params.dParams.d);
+        params.dParams.r = rescaleToParameter(output[4],params.dParams.r);
+    }
+}
+
+void ofApp::train(){
+
+    std::vector<vector<double>> inputs;
+    std::vector<vector<double>> outputs;
+
+    // Lambda to split the original vector
+    auto splitLambda = [&inputs, &outputs](const auto& tuple) {
+         // Insert elements from the vector of doubles into the single vector
+        const ofVec2f& p = std::get<0>(tuple);
+        inputs.push_back({p.x, p.y});
+
+        const vector<double>& dp = std::get<1>(tuple);
+        outputs.push_back(dp);
+       
+    };
+
+    // Apply the lambda to each element of the original vector
+    std::for_each(training_data.begin(), training_data.end(), splitLambda);
+
+    for(int z = 0; z < params.sParams.numTrainingCycles; z++){
+        for (size_t i = 0; i < inputs.size(); ++i){
+            auto in = inputs[i].data();
+            auto out = outputs[i].data();
+            genann_train(ann, in, out, params.sParams.learningRate);
+        }
+    }
+    const double* testOutput= genann_run(ann, inputs[0].data());
+    double mse = 0;
+    for(size_t i = 0; i < ann->outputs; ++i){
+        mse += pow((outputs[0][i] - testOutput[i]), 2);
+    }
+    loss = "loss: " + ofToString(mse);
 }
 
 //--------------------------------------------------------------
@@ -101,63 +236,21 @@ void ofApp::draw(){
     }
 
     //end the shape
-    if(autoRotate) {
+    if(params.sParams.autoRotate) {
         static float rotationX = 0.1;
         static float rotationY = 0.1;
         static float rotationZ = 0.1;
         ofRotateXDeg(rotationX);
         ofRotateYDeg(rotationY);
         ofRotateZDeg(rotationZ);
-        rotationX += rotationSpeedX;
-        rotationY += rotationSpeedY;
-        rotationZ += rotationSpeedZ;
+        rotationX += params.sParams.rotationSpeedX;
+        rotationY += params.sParams.rotationSpeedY;
+        rotationZ += params.sParams.rotationSpeedZ;
     }
     mesh.draw();
     cam.end();
-    
-    //required to call this at beginning
-    auto mainSettings = ofxImGui::Settings();
-    gui.begin();
-//    static bool bCollapse = false;
-    if (ofxImGui::BeginWindow("Dadras", mainSettings)){
-//        ImGui::SetWindowSize(ImVec2(500,300));
-        ImGui::Text("%.1f FPS (%.3f ms/frame)", ofGetFrameRate(), 1000.0f / ImGui::GetIO().Framerate);
-        ImGui::Text("Scene %i", presetManager.currentScene);
-        ofxImGui::AddParameter(params.dParams.a);
-        ofxImGui::AddParameter(params.dParams.b);
-        ofxImGui::AddParameter(params.dParams.c);
-        ofxImGui::AddParameter(params.dParams.d);
-        ofxImGui::AddParameter(params.dParams.r);
-        ImGui::Separator();
-        ofxImGui::AddParameter(params.sParams.lineMaxSize);
-        ofxImGui::AddParameter(params.sParams.lineMinLength);
-        ofxImGui::AddParameter(params.sParams.alpha);
-        ImGui::Separator();
-        ofxImGui::AddParameter(params.sParams.mixFactor);
-        ofxImGui::AddParameter(params.sParams.numIterations);
-        ofxImGui::AddParameter(params.sParams.dt);
-        ofxImGui::AddParameter(params.sParams.lerpTime);
-        ofxImGui::AddParameter(params.sParams.skipFrames);
-        ImGui::Separator();
-        if (ImGui::Button("randomize")) {
-            params.dParams.randomize();
-        }
-        if (ImGui::Button("micro-randomize")) {
-            params.dParams.microRandomize(params.sParams.microRandomizeAmt);
 
-        }
-        ofxImGui::AddParameter(params.sParams.microRandomizeAmt);
-        if (ImGui::Button("Auto Rotate")) {
-            autoRotate = !autoRotate;
-        }
-        ImGui::SliderFloat("Rotate X Speed", &rotationSpeedX, 0.0, 10.0);
-        ImGui::SliderFloat("Rotate Y Speed", &rotationSpeedY, 0.0, 10.0);
-        ImGui::SliderFloat("Rotate Z Speed", &rotationSpeedZ, 0.0, 10.0);
-    }
-    
-    ofxImGui::EndWindow(mainSettings);
-
-    gui.end();
+    if(showControls) gui.draw();
 }
 
 
@@ -178,9 +271,9 @@ void ofApp::audioOut(ofSoundBuffer& output){
             ofLog() << "Warning: Simulation reset due to instability";
         }
         
-        float x = tanh(attractor->state.x * 0.01);
-        float y = tanh(attractor->state.y * 0.01);
-        float z = tanh(attractor->state.z * 0.01);
+        float x = tanh(attractor->state.x * params.sParams.audioSignalReduction);
+        float z = tanh(attractor->state.z * params.sParams.audioSignalReduction);
+        float y = tanh(attractor->state.y * params.sParams.audioSignalReduction);
         
         output[i * outChannels + 0] = x * crossfadeCoeff1 + y * crossfadeCoeff2;
         output[i * outChannels + 1] = y * crossfadeCoeff1 + z * crossfadeCoeff2;
@@ -204,5 +297,13 @@ bool ofApp::isUnstable(const Dadras& attractor) {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    if(key == '\\'){
+        showControls = !showControls;
+        if(showControls){
+            cam.setControlArea(ofRectangle(gui.getWidth(),0,ofGetWindowWidth() - gui.getWidth(), ofGetWindowHeight()));
+        } else {
+            cam.clearControlArea();
+        }
+    }
     presetManager.keyPressed(key);
 }

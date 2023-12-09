@@ -29,15 +29,16 @@ class PresetManager {
     
 public:
     
-    PresetManager() : lerpTime(2.0), lerpTimeEnd(0), lerp(false), currentScene(1) {
+    PresetManager() : lerpTime(2.0), lerpTimeEnd(0), lerp(false)  {
         targetParams = new AllParameters();
         startParams  = new AllParameters();
         presets.resize(10);
         loadPresetsFromJson();
         currentParams = &presets[1];
+        currentScene.set("Scene",1);
     }
     
-    int currentScene;
+    ofParameter<int> currentScene;
     void update(AllParameters &params);
     void keyPressed(int key);
     void setLerpTime(float &time);

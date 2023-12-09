@@ -37,7 +37,10 @@ OF_ROOT = ../../..
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_EXTERNAL_SOURCE_PATHS = 
+#PROJECT_EXTERNAL_SOURCE_PATHS += "/opt/homebrew/Cellar/mlpack/4.3.0/include"
+#PROJECT_EXTERNAL_SOURCE_PATHS += "/opt/homebrew/Cellar/armadillo/12.6.6/include"
+#PROJECT_EXTERNAL_SOURCE_PATHS += "/opt/homebrew/Cellar/cereal/1.3.2/include"
+
 
 ################################################################################
 # PROJECT EXCLUSIONS
@@ -77,7 +80,8 @@ OF_ROOT = ../../..
 # add a runtime path to search for those shared libraries, since they aren't 
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
-# PROJECT_LDFLAGS=-Wl,-rpath=./libs
+# PROJECT_LDFLAGS = -Wl,-rpath=./libs
+# LDFLAGS =  -larmadillo,-fopenmp,-lopenblas
 
 ################################################################################
 # PROJECT DEFINES
@@ -105,7 +109,7 @@ OF_ROOT = ../../..
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CFLAGS = 
+#PROJECT_CFLAGS = 
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
@@ -138,7 +142,7 @@ OF_ROOT = ../../..
 #		(default) PROJECT_CC = (blank)
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CXX = 
+PROJECT_CXX = /opt/homebrew/Cellar/llvm/17.0.6/bin/clang++
 # PROJECT_CC = 
 
 # Uncomment/comment below to switch between C++11 and C++17 ( or newer ). On macOS C++17 needs 10.15 or above.

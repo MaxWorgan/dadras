@@ -1,6 +1,6 @@
 {
     "version": "2.0.0",
-    "shell":{
+    "shell": {
         "task": true
     },
     "tasks": [
@@ -12,22 +12,22 @@
                 "panel": "shared"
             },
             "command": "make -j -s 2>&1 && make RunRelease",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": {
                 "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
                 "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
                 }
-              }
+            }
         },
         {
             "type": "shell",
@@ -36,23 +36,23 @@
                 "reveal": "always",
                 "panel": "shared"
             },
-            "command": "make Debug -j -s 2>&1 || exit 1",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "command": "make Debug -j -s 2>&1 && make RunDebug",
+            "group": "build",
             "problemMatcher": {
                 "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
                 "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
                 }
-              }
+            }
         },
         {
             "type": "shell",
@@ -62,22 +62,22 @@
                 "panel": "shared"
             },
             "command": "make CleanDebug",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": {
                 "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
                 "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
                 }
-              }
+            }
         },
         {
             "type": "shell",
@@ -87,22 +87,22 @@
                 "panel": "shared"
             },
             "command": "make CleanRelease",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": {
                 "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
                 "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
                 }
-              }
+            }
         },
         {
             "type": "shell",
@@ -112,22 +112,23 @@
                 "panel": "shared"
             },
             "command": "make clean",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": {
                 "owner": "cpp",
-                "fileLocation": ["relative", "${workspaceFolder}"],
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
                 "pattern": {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
                 }
-              }
-         }
+            }
+        },
+        
     ]
 }
