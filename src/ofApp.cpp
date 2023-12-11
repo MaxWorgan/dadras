@@ -149,6 +149,11 @@ void ofApp::predictParameters(float &value){
 
 void ofApp::train(){
 
+    if(training_data.empty()){
+        ofLog() << "no data to train";
+        return;
+    }
+
     std::vector<vector<double>> inputs;
     std::vector<vector<double>> outputs;
 
