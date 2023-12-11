@@ -10,7 +10,7 @@ TODO:
 + Add Auto rotate camera controls
 - Make the graphics good (glsl)
 - Add alternative tweens
-- Add a MLP for traversing the presets in 2D
++ Add a MLP for traversing the presets in 2D
     https://github.com/yixuan/MiniDNN
     or https://github.com/mlpack/mlpack
     just like flucoma's examples...

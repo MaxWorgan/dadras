@@ -17,6 +17,7 @@ void PresetManager::update(AllParameters &params){
         if(amt > 1.0){
             amt = 1.0;
             lerp = false;
+            status->set("Scene " + to_string(currentScene));
         }
         params.dParams.a = ofLerp(startParams->dParams.a, targetParams->dParams.a,amt);
         params.dParams.b = ofLerp(startParams->dParams.b, targetParams->dParams.b,amt);
@@ -44,17 +45,18 @@ static const std::map<char32_t,int> keycodes = {{'!', 1},{'"',2},{U'£',3},{'$',
 
 void PresetManager::keyPressed(int key) {
     if (ofGetKeyPressed(OF_KEY_CONTROL) && (key >= '0' && key <= '9')){
-        ofLog() << "Saved current state in " << key - '0';
+        status->set("Saved current Scene in " + to_string(key - '0'));
+        ofLog() << status->get();
         presets[key - '0'] = *currentParams;
     } else if (key >= '0' && key <= '9'){
-        ofLog() << "Lerping to state " << key - '0';
+        status->set("Lerping to Scene "  + to_string(key - '0'));
+        currentScene = key - '0';
         lerp = true;
         lerpTimeEnd = ofGetElapsedTimef() + lerpTime;
         *startParams = *currentParams;
         *targetParams = presets[key - '0'];
-        currentScene = key - '0';
     } else if (keycodes.find(key) != keycodes.end()){
-        ofLog() << "Moving to state " << keycodes.at(key);
+        currentScene = keycodes.at(key);
         lerp = true;
         lerpTimeEnd = ofGetElapsedTimef();
         *startParams = *currentParams;
@@ -64,6 +66,7 @@ void PresetManager::keyPressed(int key) {
     } else if (key == 'l'){
         loadPresetsFromJson();
     }
+    
 
 }
 
@@ -74,16 +77,18 @@ void PresetManager::setLerpTime(float &time){
 void PresetManager::savePresetsToJson() { 
     ofJson j = presets;
     ofSavePrettyJson(PRESETS_FILE, j);
-    ofLog() << "Saved presets to " << PRESETS_FILE;
+    status->set("Saved presets to " PRESETS_FILE);
 }
 
 void PresetManager::loadPresetsFromJson() {
     ofJson j = ofLoadJson(PRESETS_FILE);
     try {
         presets = j.template get<std::vector<AllParameters>>();
-        ofLog() << "Loaded presets from " << PRESETS_FILE;
+        status->set("Loaded presets from " PRESETS_FILE);
+        ofLog() << status-> get();
     } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range& e){
-        ofLog() << "Failed to load presets from " << PRESETS_FILE << e.what();
+        status->set("Failed to load presets " + std::string(e.what()));
+        ofLog() << status->get();
     }
 }
 

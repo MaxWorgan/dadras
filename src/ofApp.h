@@ -41,7 +41,7 @@ class ofApp : public ofBaseApp{
         Dadras* attractor;
         AllParameters params;
         genann *ann;
-        PresetManager presetManager;
+        PresetManager *presetManager;
 
         ofParameter<bool> showControls;
         ofParameter<string> loss;

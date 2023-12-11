@@ -33,6 +33,7 @@ struct SimulationParameters{
     ofParameter<float> learningRate;
     ofParameter<bool>  predict;
     ofParameter<float> audioSignalReduction;
+    ofParameter<string> status;
 
     SimulationParameters() {
         lineMaxSize.set("Ribbon Size", 40,5,100);
@@ -54,6 +55,7 @@ struct SimulationParameters{
         learningRate.set("Learning Rate", 0.1, 0.001, 0.9);
         predict.set("predict",false);
         audioSignalReduction.set("Audio squish",0.01,0.0001,0.1);
+        status.set("");
     }
 };
 

@@ -29,7 +29,9 @@ void ofApp::setup(){
     
     attractor = new Dadras();
 
-    params.sParams.lerpTime.addListener(&presetManager, &PresetManager::setLerpTime);
+    presetManager = new PresetManager(params.sParams.status);
+
+    params.sParams.lerpTime.addListener(&(*presetManager), &PresetManager::setLerpTime);
     params.sParams.mouseX.addListener(&(*this), &ofApp::predictParameters);
     
     polyLine.clear();
@@ -43,6 +45,7 @@ void ofApp::setup(){
 
 void ofApp::setupGui(ofxControlPanel &gui, AllParameters &params) {
     gui.setWhichPanel(0);
+    gui.addLabel(params.sParams.status);
     gui.addSlider(params.dParams.a);
     gui.addSlider(params.dParams.b);
     gui.addSlider(params.dParams.c);
@@ -92,7 +95,7 @@ void ofApp::setupGui(ofxControlPanel &gui, AllParameters &params) {
 void ofApp::update(){
     polyLine.clear();
     polyLine.addVertices(points);
-    presetManager.update(params);
+    presetManager->update(params);
     if(showControls) gui.update();
 }
 
@@ -305,5 +308,5 @@ void ofApp::keyPressed(int key){
             cam.clearControlArea();
         }
     }
-    presetManager.keyPressed(key);
+    presetManager->keyPressed(key);
 }
