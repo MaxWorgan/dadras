@@ -71,7 +71,25 @@
 			"compare": "cpp",
 			"concepts": "cpp",
 			"algorithm": "cpp",
-			"*.glsl": "cpp"
+			"*.glsl": "cpp",
+			"any": "cpp",
+			"complex": "cpp",
+			"forward_list": "cpp",
+			"iterator": "cpp",
+			"functional": "cpp",
+			"istream": "cpp",
+			"numeric": "cpp",
+			"optional": "cpp",
+			"ostream": "cpp",
+			"ranges": "cpp",
+			"system_error": "cpp",
+			"utility": "cpp",
+			"variant": "cpp",
+			"memory_resource": "cpp",
+			"locale": "cpp",
+			"*.frag": "cpp",
+			"execution": "cpp",
+			"ios": "cpp"
 		}
 	}
 }
