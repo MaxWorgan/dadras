@@ -10,12 +10,12 @@
 #include "ThomasAttractor.h"
 #include "DadrasAttractor.h"
 #include "PresetManager.hpp"
+#include "CoupledLorenzAttractor.h"
 
 
 #define AUDIO_BUFFER_SIZE 512
 #define DRAWING_BUFFER_SIZE 10000
-#define SAMPLE_RATE 44100
-#define LEARNING_RATE 0.001
+#define SAMPLE_RATE 96000
 class ofApp : public ofBaseApp{
 
 	public:
@@ -38,6 +38,7 @@ class ofApp : public ofBaseApp{
     
         Dadras* dadras;
         Thomas* thomas;
+        CoupledLorenz* coupledLorenz;
 
         BaseAttractor* attractor;
 

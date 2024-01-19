@@ -5,6 +5,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
+
     points.resize(DRAWING_BUFFER_SIZE);
 
     ofSetWindowTitle("Dadras Visualiser");
@@ -16,6 +17,11 @@ void ofApp::setup(){
     
     gui = new ofxControlPanel();
     gui->setup("Choose", 0.0, 0.0, 300, ofGetHeight(), false);
+    
+    dadras = new Dadras(params.status);
+    thomas = new Thomas(params.status);
+    coupledLorenz = new CoupledLorenz(params.status);
+    attractor = dadras;
 
 
     // Setup ofSound
@@ -26,10 +32,6 @@ void ofApp::setup(){
     settings.numInputChannels = 0;
     settings.bufferSize = AUDIO_BUFFER_SIZE;
     soundStream.setup(settings);
-    
-    dadras = new Dadras(params.status);
-    thomas = new Thomas(params.status);
-    attractor = dadras;
 
     params.lerpTime.addListener(&(*attractor->presetManager), &BasePresetManager::setLerpTime);
     params.mouseX.addListener(this, &ofApp::predict);
@@ -41,7 +43,7 @@ void ofApp::setup(){
     waveIndex = 0;
     showControls = false;
 
-    attractorNames = {"Dadras", "Thomas"};
+    attractorNames = {"Dadras", "Thomas", "Coupled Lorenz"};
     whichAttractor.set("Select Attractor", 0, 0, attractorNames.size() - 1);
     whichAttractor.addListener(this, &ofApp::setupAttractor);
 
@@ -49,8 +51,6 @@ void ofApp::setup(){
     gui->addTextDropDown(whichAttractor, attractorNames);
     setupGui(*gui);
     setupAttractorGui(*gui);
-
-
 
 }
 
@@ -62,11 +62,15 @@ void ofApp::setupAttractor(int &which){
         case 1:
             attractor = thomas;
             break;
+        case 2:
+            attractor = coupledLorenz;
+            break;
     }
     string attractorName = attractorNames[which];
     gui->removePanel("Attractor");
     setupAttractorGui(*gui);
 }
+
 void ofApp::predict(float &value) {
     if(params.predict) {
         dynamic_cast<MLPAttractor*>(attractor)->predict(params.mouseX.get(), params.mouseY.get());
@@ -89,20 +93,17 @@ void ofApp::setupAttractorGui(ofxControlPanel &gui){
     attractor->setupGui(gui);
     gui.addSlider(params.lerpTime);
     gui.addSlider2D(params.mouseX, params.mouseY);
-    #include <functional>
-
-    // ...
 
     ofParameter<void> capture = ofParameter<void>("capture");
-    // use bind to pass additional arguments to the callbackq
     capture.addListener(this, &ofApp::capture);
-    // capture.addListener(dynamic_cast<MLPAttractor*>(attractor), func);
-
-    // capture.addListener(std::bind(&MLPAttractor::capture, dynamic_cast<MLPAttractor*>(attractor), std::ref(params.mouseX), std::ref(params.mouseY)));
     gui.addButton(capture);
-    ofParameter<void> clear = ofParameter<void>("clear");
+    ofParameter<void> clear = ofParameter<void>("clear training data");
     clear.addListener(dynamic_cast<MLPAttractor*>(attractor), &MLPAttractor::clearTrainingData);
     gui.addButton(clear);
+    ofParameter<void> reset = ofParameter<void>("reset ann");
+    reset.addListener(dynamic_cast<MLPAttractor*>(attractor), &MLPAttractor::resetAnn);
+    gui.addButton(reset);
+
     ofParameter<void> train = ofParameter<void>("train");
     train.addListener(this, &ofApp::train);        
     gui.addButton(train);
@@ -135,56 +136,12 @@ void ofApp::setupGui(ofxControlPanel &gui) {
 void ofApp::update(){
     polyLine.clear();
     polyLine.addVertices(points);
-    //cast attractor to the correct type depending on the current attractor
     attractor->presetManager->update(params, *attractor->params.get());
-
-
     if(showControls) gui->update();
 }
 
-
-
-// void ofApp::capture(){
-
-//     // vector<ofParameter<float>> currentParams = attractor->getCurrentParams();
-
-//     // for_each(currentParams.begin(), currentParams.end(), scaleParameter);
-
-//     // training_data.push_back(
-//     //     tuple(
-//     //         ofVec2f(params.mouseX.get(),params.mouseY.get()),
-//     //         currentParams 
-//     //     )
-//     // );
-// }
-
-// void ofApp::clearTrainingData(){
-//     training_data.clear();
-// }
-
-// void ofApp::predictParameters(float &value){
-//     // if (params.predict) {
-//     //     const double data[2] = {params.mouseX.get(), params.mouseY.get()};
-//     //     ofLog() << "predict input:  x - " << data[0] << " y - " << data[1];
-//     //     const double *output = genann_run(ann, data);
-//     //     ofLog() << "predict output: " << rescaleToParameter(output[0], params.dParams.a) << " "
-//     //             << rescaleToParameter(output[1], params.dParams.b) << " "
-//     //             << rescaleToParameter(output[1], params.dParams.c) << " "
-//     //             << rescaleToParameter(output[1], params.dParams.d) << " "
-//     //             << rescaleToParameter(output[1], params.dParams.r);
-
-//     //     params.dParams.a = rescaleToParameter(output[0],params.dParams.a);
-//     //     params.dParams.b = rescaleToParameter(output[1],params.dParams.b);
-//     //     params.dParams.c = rescaleToParameter(output[2],params.dParams.c);
-//     //     params.dParams.d = rescaleToParameter(output[3],params.dParams.d);
-//     //     params.dParams.r = rescaleToParameter(output[4],params.dParams.r);
-//     // }
-// }
-
-
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
     
     cam.begin();
     
@@ -192,8 +149,7 @@ void ofApp::draw(){
     mesh.clear();
     
     ofSetColor(0,params.alpha);
-    //do the same thing from the first example...
-    for(unsigned int i = 1; i < (int)verts.size(); i++){
+    for(size_t i = 1; i < verts.size(); i++){
 
         //find this point and the next point
         glm::vec3 thisPoint = verts[i-1];
@@ -208,9 +164,6 @@ void ofApp::draw(){
 
         //get the distance from one point to the next
         float distance = glm::length(direction);
-
-        //get the normalized direction. normalized vectors always have a length of one
-        //and are really useful for representing directions as opposed to something with length
         glm::vec3 unitDirection = glm::normalize(direction);
 
         //find both directions to the left and to the right

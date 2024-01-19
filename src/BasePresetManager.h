@@ -11,13 +11,10 @@ public:
     float lerpTime;
     float lerpTimeEnd;
     bool lerp;
-    string PRESETS_FILE = "presets.json";
     shared_ptr<ofParameter<string>> status;
     ofParameter<int> currentScene;
 
-    BasePresetManager(shared_ptr<ofParameter<string>> &s) : lerpTime(2.0), lerpTimeEnd(0), lerp(false), status(s) {
-        // Initialize non-templated members here
-    }
+    BasePresetManager(shared_ptr<ofParameter<string>> &s) : lerpTime(2.0), lerpTimeEnd(0), lerp(false), status(s), currentScene(1) {}
 
     virtual ~BasePresetManager() = default;
 

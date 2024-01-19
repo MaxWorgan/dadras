@@ -1,0 +1,172 @@
+[
+    {
+        "aParams": {
+            "b": 0.18000000715255737
+        },
+        "sParams": {
+            "alpha": 20.0,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 40.0,
+            "lineMinLength": 50.0,
+            "mixFactor": 1.0,
+            "numIterations": 3,
+            "numTrainingCycles": 1,
+            "skipFrames": 2
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.20192568004131317
+        },
+        "sParams": {
+            "alpha": 29.00258445739746,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 10.133939743041992,
+            "lineMinLength": 8.254206657409668,
+            "mixFactor": 0.49735575914382935,
+            "numIterations": 18,
+            "numTrainingCycles": 1,
+            "skipFrames": 1
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.19317542016506195
+        },
+        "sParams": {
+            "alpha": 29.00258445739746,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 10.133939743041992,
+            "lineMinLength": 8.254206657409668,
+            "mixFactor": 0.49735575914382935,
+            "numIterations": 18,
+            "numTrainingCycles": 1,
+            "skipFrames": 1
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.17546477913856506
+        },
+        "sParams": {
+            "alpha": 29.00258445739746,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 10.133939743041992,
+            "lineMinLength": 8.254206657409668,
+            "mixFactor": 0.49735575914382935,
+            "numIterations": 18,
+            "numTrainingCycles": 1,
+            "skipFrames": 1
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.10331644862890244
+        },
+        "sParams": {
+            "alpha": 29.00258445739746,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 10.133939743041992,
+            "lineMinLength": 8.254206657409668,
+            "mixFactor": 0.49735575914382935,
+            "numIterations": 18,
+            "numTrainingCycles": 1,
+            "skipFrames": 1
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.18000000715255737
+        },
+        "sParams": {
+            "alpha": 20.0,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 40.0,
+            "lineMinLength": 50.0,
+            "mixFactor": 1.0,
+            "numIterations": 3,
+            "numTrainingCycles": 1,
+            "skipFrames": 2
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.18000000715255737
+        },
+        "sParams": {
+            "alpha": 20.0,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 40.0,
+            "lineMinLength": 50.0,
+            "mixFactor": 1.0,
+            "numIterations": 3,
+            "numTrainingCycles": 1,
+            "skipFrames": 2
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.18000000715255737
+        },
+        "sParams": {
+            "alpha": 20.0,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 40.0,
+            "lineMinLength": 50.0,
+            "mixFactor": 1.0,
+            "numIterations": 3,
+            "numTrainingCycles": 1,
+            "skipFrames": 2
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.18000000715255737
+        },
+        "sParams": {
+            "alpha": 20.0,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 40.0,
+            "lineMinLength": 50.0,
+            "mixFactor": 1.0,
+            "numIterations": 3,
+            "numTrainingCycles": 1,
+            "skipFrames": 2
+        }
+    },
+    {
+        "aParams": {
+            "b": 0.18000000715255737
+        },
+        "sParams": {
+            "alpha": 20.0,
+            "audioSignalReduction": 0.009999999776482582,
+            "dt": 0.003000000026077032,
+            "learningRate": 0.10000000149011612,
+            "lineMaxSize": 40.0,
+            "lineMinLength": 50.0,
+            "mixFactor": 1.0,
+            "numIterations": 3,
+            "numTrainingCycles": 1,
+            "skipFrames": 2
+        }
+    }
+]

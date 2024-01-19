@@ -77,51 +77,20 @@ inline void from_json(const ofJson& j, AllParameters<DadrasParameters>& p) {
 }
 
 template <>
+inline string PresetManager<DadrasParameters>::getPresetFileName() const {
+    return "dadras_presets.json";
+}
+
+template <>
 inline void PresetManager<DadrasParameters>::updateAttractorParams(AbstractAttractorParameters &dParams, float amt) {
-    //cast to the correct type
-    DadrasParameters &p = static_cast<DadrasParameters&>(dParams);
+    //cast to DadrasParameters
+    DadrasParameters* p = static_cast<DadrasParameters*>(&dParams);
 
-    currentParams->aParams.a = ofLerp(startParams->aParams.a, targetParams->aParams.a, amt);
-    currentParams->aParams.b = ofLerp(startParams->aParams.b, targetParams->aParams.b, amt);
-    currentParams->aParams.c = ofLerp(startParams->aParams.c, targetParams->aParams.c, amt);
-    currentParams->aParams.d = ofLerp(startParams->aParams.d, targetParams->aParams.d, amt);
-    currentParams->aParams.r = ofLerp(startParams->aParams.r, targetParams->aParams.r, amt);
-}
-
-template <>
-inline void PresetManager<DadrasParameters>::savePresetsToJson() { 
-    ofJson j = presets;
-    ofSavePrettyJson(PRESETS_FILE, j);
-    status->set("Saved presets to " + PRESETS_FILE);
-}
-template<>
-inline void PresetManager<DadrasParameters>::loadPresetsFromJson() {
-    ofJson j = ofLoadJson(PRESETS_FILE);
-    try {
-        presets = j.template get<std::vector<AllParameters<DadrasParameters>>>();
-        status->set("Loaded presets from " + PRESETS_FILE);
-        ofLog() << status-> get();
-    } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range& e){
-        status->set("Failed to load presets " + std::string(e.what()));
-        ofLog() << status->get();
-    }
-}
-
-template <>
-inline AllParameters<DadrasParameters>::AllParameters(DadrasParameters a, SimulationParameters s) : aParams(a), sParams(s) {}
-
-template <>
-inline AllParameters<DadrasParameters>::AllParameters() : aParams(), sParams() {}
-
-template <>
-inline PresetManager<DadrasParameters>::PresetManager(shared_ptr<ofParameter<string>> &s) : BasePresetManager(s) {
-        targetParams = new AllParameters<DadrasParameters>();
-        startParams  = new AllParameters<DadrasParameters>();
-        presets.resize(10);
-        currentParams = &presets[0];
-        status->set("Scene 1");
-        currentScene = 1;
-        loadPresetsFromJson();
+    p->a = ofLerp(startParams->aParams.a, targetParams->aParams.a, amt);
+    p->b = ofLerp(startParams->aParams.b, targetParams->aParams.b, amt);
+    p->c = ofLerp(startParams->aParams.c, targetParams->aParams.c, amt);
+    p->d = ofLerp(startParams->aParams.d, targetParams->aParams.d, amt);
+    p->r = ofLerp(startParams->aParams.r, targetParams->aParams.r, amt);
 }
 
 
@@ -131,11 +100,6 @@ class Dadras : public Attractor<DadrasParameters>{
         Dadras(shared_ptr<ofParameter<string>> status) : Attractor<DadrasParameters>({0.1, 0.1, 0.1}, make_shared<DadrasParameters>()){
             presetManager = new PresetManager<DadrasParameters>(status);
             setupAnn();
-        }
-
-        ~Dadras(){
-            delete presetManager;
-            genann_free(ann);
         }
 
         int getNumOutputs() const override{

@@ -15,7 +15,18 @@ class MLPAttractor : public ParameterInterface{
         MLPAttractor() {
         }
 
+        ~MLPAttractor() {
+            genann_free(ann);
+        }
+
         virtual int getNumOutputs() const = 0;
+
+
+        //method to reinitialize the ANN
+        void resetAnn() {
+            genann_free(ann);
+            setupAnn();
+        }
 
         void setupAnn() {
             ann = genann_init(2, 1, getNumOutputs(), getNumOutputs());

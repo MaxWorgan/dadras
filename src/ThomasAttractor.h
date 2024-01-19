@@ -50,68 +50,28 @@ inline void from_json(const ofJson& j, AllParameters<ThomasParameters>& p) {
     j.at("sParams").get_to(p.sParams);
 }
 
-
-
 template <>
 inline void PresetManager<ThomasParameters>::updateAttractorParams(AbstractAttractorParameters &params, float amt) {
-    //cast to the correct type
-    ThomasParameters &p = static_cast<ThomasParameters&>(params);   
-    currentParams->aParams.b = ofLerp(currentParams->aParams.b, p.b, amt);
-}
-
-
-template <>
-inline void PresetManager<ThomasParameters>::savePresetsToJson() { 
-    // ofJson j = presets;
-    // ofSavePrettyJson(PRESETS_FILE, j);
-    // status->set("Saved presets to " + PRESETS_FILE);
+    //cast to ThomasParameters
+    ThomasParameters* p = static_cast<ThomasParameters*>(&params);
+    p->b = ofLerp(startParams->aParams.b, targetParams->aParams.b, amt);
 }
 
 template <>
-inline void PresetManager<ThomasParameters>::loadPresetsFromJson() {
-    // ofJson j = ofLoadJson(PRESETS_FILE);
-    // try {
-    //     presets = j.template get<std::vector<AllParameters<ThomasParameters>>>();
-    //     status->set("Loaded presets from " + PRESETS_FILE);
-    //     ofLog() << status-> get();
-    // } catch (nlohmann::json_abi_v3_11_2::detail::out_of_range& e){
-    //     status->set("Failed to load presets " + std::string(e.what()));
-    //     ofLog() << status->get();
-    // }
+inline string PresetManager<ThomasParameters>::getPresetFileName() const {
+    return "thomas_presets.json";
 }
-
-
-template <>
-inline AllParameters<ThomasParameters>::AllParameters(ThomasParameters a, SimulationParameters s) : aParams(a), sParams(s) {}
-
-template <>
-inline AllParameters<ThomasParameters>::AllParameters() {}
-
-template <>
-inline PresetManager<ThomasParameters>::PresetManager(shared_ptr<ofParameter<string>> &s) : BasePresetManager(s) {
-        targetParams = new AllParameters<ThomasParameters>();
-        startParams  = new AllParameters<ThomasParameters>();
-        presets.resize(10);
-        loadPresetsFromJson();
-        currentParams = &presets[0];
-        status->set("Scene 1");
-        currentScene = 1;
-}
-
-
 
 class Thomas : public Attractor<ThomasParameters> {
     public:
         Thomas(shared_ptr<ofParameter<string>> &status) : Attractor<ThomasParameters>({0.4, 0.3, 0.1}, make_shared<ThomasParameters>()) {
             presetManager = new PresetManager<ThomasParameters>(status);
             setupAnn();
-
         }
 
         int getNumOutputs() const override {
             return 1;
         }
-
 
         vector<ofParameter<float>> getParameterValues() const override {
             return params->getCurrentParams();
