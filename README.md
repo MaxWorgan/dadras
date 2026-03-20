@@ -1,17 +1,14 @@
 # dadras
 
 <p align="center">
-  <img src="images/dadras_1.png" alt="Dadras attractor" width="700">
-</p>
-
-<p align="center">
-  <img src="images/dadras_2.png" alt="Dadras attractor" width="230">
-  <img src="images/dadras_3.png" alt="Dadras attractor" width="230">
-  <img src="images/dadras_4.png" alt="Dadras attractor" width="230">
+  <img src="images/dadras_1.png" alt="Dadras attractor" width="260">
+  <img src="images/dadras_2.png" alt="Dadras attractor" width="260">
+  <img src="images/dadras_3.png" alt="Dadras attractor" width="260">
 </p>
 <p align="center">
-  <img src="images/dadras_5.png" alt="Dadras attractor" width="230">
-  <img src="images/dadras_6.png" alt="Dadras attractor" width="230">
+  <img src="images/dadras_4.png" alt="Dadras attractor" width="260">
+  <img src="images/dadras_5.png" alt="Dadras attractor" width="260">
+  <img src="images/dadras_6.png" alt="Dadras attractor" width="260">
 </p>
 
 A real-time chaotic attractor visualizer and audio synthesizer built with [openFrameworks](https://openframeworks.cc/) v0.12.0.
