@@ -142,7 +142,7 @@ OF_ROOT = ../../..
 #		(default) PROJECT_CC = (blank)
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-PROJECT_CXX = /opt/homebrew/Cellar/llvm/17.0.6/bin/clang++
+PROJECT_CXX = /opt/homebrew/Cellar/llvm/17.0.6_1/bin/clang++
 # PROJECT_CC = 
 
 # Uncomment/comment below to switch between C++11 and C++17 ( or newer ). On macOS C++17 needs 10.15 or above.

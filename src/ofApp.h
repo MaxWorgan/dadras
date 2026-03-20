@@ -15,7 +15,7 @@
 
 #define AUDIO_BUFFER_SIZE 512
 #define DRAWING_BUFFER_SIZE 10000
-#define SAMPLE_RATE 96000
+#define SAMPLE_RATE 44100
 class ofApp : public ofBaseApp{
 
 	public:

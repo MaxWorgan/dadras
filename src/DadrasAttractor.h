@@ -91,6 +91,7 @@ inline void PresetManager<DadrasParameters>::updateAttractorParams(AbstractAttra
     p->c = ofLerp(startParams->aParams.c, targetParams->aParams.c, amt);
     p->d = ofLerp(startParams->aParams.d, targetParams->aParams.d, amt);
     p->r = ofLerp(startParams->aParams.r, targetParams->aParams.r, amt);
+    
 }
 
 
